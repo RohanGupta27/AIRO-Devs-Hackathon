@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Study Planner</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      width: 350px;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background: #667eea;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #333;
+      min-height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h2>AI Study Planner</h2>
+    <p>Enter your available time and task</p>
+
+    <input id="hours" type="number" placeholder="Available hours">
+    <input id="task" placeholder="Study / Assignment / Revision">
+
+    <button onclick="getPlan()">Generate Plan</button>
+
+    <div class="result" id="result">
+      Your plan will appear here
+    </div>
+  </div>
+
+  <script>
+    function getPlan() {
+      const hours = document.getElementById("hours").value;
+      const task = document.getElementById("task").value;
+
+      fetch("http://127.0.0.1:5000/plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          hours: hours,
+          task: task
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").innerText = data.plan;
+      })
+      .catch(() => {
+        document.getElementById("result").innerText =
+          "⚠️ Unable to connect to backend";
+      });
+    }
+  </script>
+
+</body>
+</html>
